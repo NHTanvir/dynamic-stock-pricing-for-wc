@@ -1,0 +1,14 @@
+/* Frontend styles for Dynamic Stock Pricing plugin */
+.stock-price-adjustment-message {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f0f8ff;
+    border-left: 4px solid #2196F3;
+    font-size: 14px;
+    font-style: italic;
+    color: #555;
+}
+
+.product .stock-price-adjustment-message {
+    margin-bottom: 15px;
+}

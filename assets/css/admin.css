@@ -1,0 +1,13 @@
+/* Admin styles for Dynamic Stock Pricing plugin */
+.woocommerce_page_dynamic-stock-pricing .card {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.woocommerce_page_dynamic-stock-pricing ul {
+    margin-left: 20px;
+}

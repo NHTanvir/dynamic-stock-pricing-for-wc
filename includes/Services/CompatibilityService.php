@@ -1,0 +1,122 @@
+<?php
+namespace DynamicStockPricing\Services;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * Compatibility Service
+ * Ensures plugin works correctly with WooCommerce stock management
+ */
+class CompatibilityService {
+
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $this->init_hooks();
+    }
+
+    /**
+     * Initialize hooks
+     */
+    private function init_hooks() {
+        // Verify compatibility with WooCommerce features
+        add_action('init', array($this, 'verify_compatibility'));
+        
+        // Handle edge cases for different product types
+        add_filter('woocommerce_product_is_visible', array($this, 'ensure_simple_product_handling'), 10, 2);
+    }
+
+    /**
+     * Verify plugin compatibility with current WooCommerce installation
+     */
+    public function verify_compatibility() {
+        // Check if WooCommerce is active and at the required version
+        if (!function_exists('WC')) {
+            return;
+        }
+
+        $wc_version = defined('WC_VERSION') ? WC_VERSION : false;
+        
+        if ($wc_version && version_compare($wc_version, '5.0', '<')) {
+            add_action('admin_notices', array($this, 'outdated_wc_notice'));
+        }
+    }
+
+    /**
+     * Show notice if WooCommerce version is outdated
+     */
+    public function outdated_wc_notice() {
+        echo '<div class="notice notice-warning"><p>' . 
+             __('Dynamic Stock Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher.', 'dynamic-stock-pricing') . 
+             '</p></div>';
+    }
+
+    /**
+     * Ensure plugin only affects simple products with stock management
+     */
+    public function ensure_simple_product_handling($visible, $product_id) {
+        if (!$this->is_enabled()) {
+            return $visible;
+        }
+
+        $product = wc_get_product($product_id);
+        
+        // Only apply to simple products with stock management enabled
+        if ($product && $product->get_type() === 'simple' && $product->managing_stock()) {
+            return $visible;
+        }
+        
+        return $visible;
+    }
+
+    /**
+     * Check if plugin is enabled
+     */
+    private function is_enabled() {
+        $settings = get_option('dynamic_stock_pricing_settings', array());
+        return !empty($settings['enable_plugin']);
+    }
+
+    /**
+     * Check if product meets requirements for stock-based pricing
+     * 
+     * @param int|WC_Product $product Product ID or product object
+     * @return bool True if product is compatible, false otherwise
+     */
+    public function is_product_compatible($product) {
+        if (!$this->is_enabled()) {
+            return false;
+        }
+
+        // Accept both product ID and product object
+        if (is_numeric($product)) {
+            $product = wc_get_product($product);
+        }
+
+        // Check if it's a valid product object
+        if (!$product || !is_object($product)) {
+            return false;
+        }
+
+        // Only apply to simple products
+        if ($product->get_type() !== 'simple') {
+            return false;
+        }
+
+        // Only apply to products with stock management enabled
+        if (!$product->managing_stock()) {
+            return false;
+        }
+
+        // Check if stock quantity is valid
+        $stock_quantity = $product->get_stock_quantity();
+        if ($stock_quantity === null || $stock_quantity < 0) {
+            return false; // Stock not managed or unlimited
+        }
+
+        return true;
+    }
+}

@@ -1,0 +1,163 @@
+# English Translation for Dynamic Stock Pricing for WooCommerce
+msgid ""
+msgstr ""
+"Project-Id-Version: Dynamic Stock Pricing for WooCommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-01 00:00+0000\n"
+"PO-Revision-Date: 2023-01-01 00:00+0000\n"
+"Last-Translator: Plugin Developer <contact@example.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: dynamic-stock-pricing-for-wc.php:8
+msgid "Dynamic Stock Pricing for WooCommerce"
+msgstr "Dynamic Stock Pricing for WooCommerce"
+
+#: includes/Modules/AdminSettingsModule.php:36
+msgid "Dynamic Stock Pricing"
+msgstr "Dynamic Stock Pricing"
+
+#: includes/Modules/AdminSettingsModule.php:37
+msgid "Stock Pricing"
+msgstr "Stock Pricing"
+
+#: includes/Modules/AdminSettingsModule.php:56
+msgid "Pricing Configuration"
+msgstr "Pricing Configuration"
+
+#: includes/Modules/AdminSettingsModule.php:66
+msgid "Enable Dynamic Pricing"
+msgstr "Enable Dynamic Pricing"
+
+#: includes/Modules/AdminSettingsModule.php:69
+msgid "Check this box to enable dynamic stock-based pricing"
+msgstr "Check this box to enable dynamic stock-based pricing"
+
+#: includes/Modules/AdminSettingsModule.php:78
+msgid "Low Stock Threshold"
+msgstr "Low Stock Threshold"
+
+#: includes/Modules/AdminSettingsModule.php:81
+#: includes/Modules/AdminSettingsModule.php:93
+msgid "Stock level considered low (default: 5)"
+msgstr "Stock level considered low (default: 5)"
+
+#: includes/Modules/AdminSettingsModule.php:90
+msgid "Low Stock Price Increase"
+msgstr "Low Stock Price Increase"
+
+#: includes/Modules/AdminSettingsModule.php:96
+msgid "Price increase percentage when stock is low (default: 40%)"
+msgstr "Price increase percentage when stock is low (default: 40%)"
+
+#: includes/Modules/AdminSettingsModule.php:105
+msgid "Medium Stock Threshold"
+msgstr "Medium Stock Threshold"
+
+#: includes/Modules/AdminSettingsModule.php:108
+#: includes/Modules/AdminSettingsModule.php:120
+msgid "Stock level considered medium (default: 20)"
+msgstr "Stock level considered medium (default: 20)"
+
+#: includes/Modules/AdminSettingsModule.php:117
+msgid "Medium Stock Price Increase"
+msgstr "Medium Stock Price Increase"
+
+#: includes/Modules/AdminSettingsModule.php:123
+msgid "Price increase percentage when stock is medium (default: 20%)"
+msgstr "Price increase percentage when stock is medium (default: 20%)"
+
+#: includes/Modules/AdminSettingsModule.php:132
+msgid "High Stock Threshold"
+msgstr "High Stock Threshold"
+
+#: includes/Modules/AdminSettingsModule.php:135
+#: includes/Modules/AdminSettingsModule.php:147
+msgid "Stock level considered high (default: 100)"
+msgstr "Stock level considered high (default: 100)"
+
+#: includes/Modules/AdminSettingsModule.php:144
+msgid "High Stock Price Decrease"
+msgstr "High Stock Price Decrease"
+
+#: includes/Modules/AdminSettingsModule.php:150
+msgid "Price decrease percentage when stock is high (default: 15%)"
+msgstr "Price decrease percentage when stock is high (default: 15%)"
+
+#: includes/Modules/AdminSettingsModule.php:158
+msgid "Enable Customer Message"
+msgstr "Enable Customer Message"
+
+#: includes/Modules/AdminSettingsModule.php:161
+msgid "Display a message to customers about price adjustments"
+msgstr "Display a message to customers about price adjustments"
+
+#: includes/Modules/AdminSettingsModule.php:169
+msgid "Customer Message"
+msgstr "Customer Message"
+
+#: includes/Modules/AdminSettingsModule.php:172
+msgid "Message shown to customers when prices are adjusted (default: \"High demand – price adjusted based on availability\")"
+msgstr "Message shown to customers when prices are adjusted (default: \"High demand – price adjusted based on availability\")"
+
+#: includes/Modules/AdminSettingsModule.php:181
+msgid "High demand – price adjusted based on availability"
+msgstr "High demand – price adjusted based on availability"
+
+#: includes/Modules/AdminSettingsModule.php:245
+msgid "Configure how stock levels affect product pricing."
+msgstr "Configure how stock levels affect product pricing."
+
+#: includes/Modules/AdminSettingsModule.php:365
+msgid "How It Works"
+msgstr "How It Works"
+
+#: includes/Modules/AdminSettingsModule.php:368
+msgid "If stock ≤ Low Stock Threshold: increase price by Low Stock Price Increase %"
+msgstr "If stock ≤ Low Stock Threshold: increase price by Low Stock Price Increase %"
+
+#: includes/Modules/AdminSettingsModule.php:369
+msgid "If stock ≤ Medium Stock Threshold: increase price by Medium Stock Price Increase %"
+msgstr "If stock ≤ Medium Stock Threshold: increase price by Medium Stock Price Increase %"
+
+#: includes/Modules/AdminSettingsModule.php:370
+msgid "If stock ≥ High Stock Threshold: decrease price by High Stock Price Decrease %"
+msgstr "If stock ≥ High Stock Threshold: decrease price by High Stock Price Decrease %"
+
+#: includes/Modules/AdminSettingsModule.php:371
+msgid "Otherwise: use normal price"
+msgstr "Otherwise: use normal price"
+
+#: includes/Modules/CustomerMessagingModule.php:70
+msgid "Dynamic Pricing Notice"
+msgstr "Dynamic Pricing Notice"
+
+#: includes/Services/CompatibilityService.php:42
+msgid "Dynamic Stock Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
+msgstr "Dynamic Stock Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
+
+#. translators: 1: adjustment percentage
+#: includes/Services/PricingService.php:281
+msgid "Price increased by %d%% due to low stock"
+msgstr "Price increased by %d%% due to low stock"
+
+#. translators: 1: adjustment percentage
+#: includes/Services/PricingService.php:284
+msgid "Price increased by %d%% due to limited stock"
+msgstr "Price increased by %d%% due to limited stock"
+
+#. translators: 1: adjustment percentage
+#: includes/Services/PricingService.php:287
+msgid "Price decreased by %d%% due to high stock"
+msgstr "Price decreased by %d%% due to high stock"
+
+#: dynamic-stock-pricing-for-wc.php:29
+msgid "Dynamic Stock Pricing for WooCommerce requires WooCommerce to be installed and active."
+msgstr "Dynamic Stock Pricing for WooCommerce requires WooCommerce to be installed and active."
