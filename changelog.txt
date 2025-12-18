@@ -1,0 +1,16 @@
+== Changelog ==
+
+= 1.0.0 =
+* Initial release of Dynamic Stock Pricing for WooCommerce
+* Added dynamic pricing based on stock levels:
+  - If stock ≤ 5 → increase price by 40%
+  - If stock ≤ 20 → increase price by 20%
+  - If stock ≥ 100 → decrease price by 15%
+  - Otherwise → use normal price
+* Added admin settings page under WooCommerce menu
+* Implemented configurable thresholds and percentage adjustments
+* Added optional customer messaging about price adjustments
+* Added support for product page, cart, and checkout pricing
+* Added compatibility with simple products and WooCommerce stock management
+* Made translation-ready with POT file included
+* Implemented proper WordPress and WooCommerce coding standards

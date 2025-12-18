@@ -14,126 +14,139 @@
  */
 
 // Exit if accessed directly
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 // Define plugin constants
-define('DYNAMIC_STOCK_PRICING_VERSION', '1.0.0');
-define('DYNAMIC_STOCK_PRICING_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('DYNAMIC_STOCK_PRICING_PLUGIN_PATH', plugin_dir_path(__FILE__));
+define( 'DYNAMIC_STOCK_PRICING_VERSION', '1.0.0' );
+define( 'DYNAMIC_STOCK_PRICING_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'DYNAMIC_STOCK_PRICING_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
 // Check if WooCommerce is active
-if (!in_array('woocommerce/woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-    add_action('admin_notices', function () {
-        echo '<div class="notice notice-error"><p><strong>Dynamic Stock Pricing for WooCommerce</strong> requires WooCommerce to be installed and active.</p></div>';
-    });
-    return;
+if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
+	add_action( 'admin_notices', 'dsp_woocommerce_missing_notice' );
+	return;
 }
 
-// Main plugin class
+/**
+ * Display notice if WooCommerce is not active
+ */
+function dsp_woocommerce_missing_notice() {
+	echo '<div class="notice notice-error"><p><strong>Dynamic Stock Pricing for WooCommerce</strong> requires WooCommerce to be installed and active.</p></div>';
+}
+
+/**
+ * Main plugin class
+ */
 class Dynamic_Stock_Pricing_For_WC {
 
-    /**
-     * Plugin instance
-     */
-    private static $instance = null;
+	/**
+	 * Plugin instance
+	 *
+	 * @var object
+	 */
+	private static $instance = null;
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        $this->init_hooks();
-    }
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->init_hooks();
+	}
 
-    /**
-     * Initialize the plugin
-     */
-    public static function get_instance() {
-        if (null === self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+	/**
+	 * Initialize the plugin
+	 *
+	 * @return object
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
 
-    /**
-     * Initialize hooks
-     */
-    private function init_hooks() {
-        // Load plugin text domain for translations
-        add_action('init', array($this, 'load_textdomain'));
-        add_action('init', array($this, 'load_textdomain_late'), 999);
+	/**
+	 * Initialize hooks
+	 */
+	private function init_hooks() {
+		// Load plugin text domain for translations
+		add_action( 'init', array( $this, 'load_textdomain' ) );
+		add_action( 'init', array( $this, 'load_textdomain_late' ), 999 );
 
-        // Initialize services after plugins are loaded
-        add_action('plugins_loaded', array($this, 'init_services'));
+		// Initialize services after plugins are loaded
+		add_action( 'plugins_loaded', array( $this, 'init_services' ) );
 
-        // Enqueue scripts and styles
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-    }
+		// Enqueue scripts and styles
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+	}
 
-    /**
-     * Load plugin text domain for translations
-     */
-    public function load_textdomain() {
-        load_plugin_textdomain(
-            'dynamic-stock-pricing',
-            false,
-            dirname(plugin_basename(__FILE__)) . '/languages'
-        );
-    }
+	/**
+	 * Load plugin text domain for translations
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain(
+			'dynamic-stock-pricing',
+			false,
+			dirname( plugin_basename( __FILE__ ) ) . '/languages'
+		);
+	}
 
-    /**
-     * Late load text domain to ensure compatibility with translation systems
-     */
-    public function load_textdomain_late() {
-        load_plugin_textdomain(
-            'dynamic-stock-pricing',
-            false,
-            dirname(plugin_basename(__FILE__)) . '/languages'
-        );
-    }
+	/**
+	 * Late load text domain to ensure compatibility with translation systems
+	 */
+	public function load_textdomain_late() {
+		load_plugin_textdomain(
+			'dynamic-stock-pricing',
+			false,
+			dirname( plugin_basename( __FILE__ ) ) . '/languages'
+		);
+	}
 
-    /**
-     * Initialize services
-     */
-    public function init_services() {
-        // Include service classes
-        require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Services/PricingService.php';
-        require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Services/CompatibilityService.php';
-        require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Modules/AdminSettingsModule.php';
-        require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Modules/CustomerMessagingModule.php';
+	/**
+	 * Initialize services
+	 */
+	public function init_services() {
+		// Include service classes
+		require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Services/PricingService.php';
+		require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Services/CompatibilityService.php';
+		require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Modules/AdminSettingsModule.php';
+		require_once DYNAMIC_STOCK_PRICING_PLUGIN_PATH . 'includes/Modules/CustomerMessagingModule.php';
+		
+		// Initialize the pricing service
+		new \DynamicStockPricing\Services\PricingService();
+		
+		// Initialize the compatibility service
+		new \DynamicStockPricing\Services\CompatibilityService();
 
-        // Initialize the pricing service
-        new \DynamicStockPricing\Services\PricingService();
+		// Initialize admin settings module
+		new \DynamicStockPricing\Modules\AdminSettingsModule();
+		
+		// Initialize customer messaging module
+		new \DynamicStockPricing\Modules\CustomerMessagingModule();
+	}
 
-        // Initialize the compatibility service
-        new \DynamicStockPricing\Services\CompatibilityService();
-
-        // Initialize admin settings module
-        new \DynamicStockPricing\Modules\AdminSettingsModule();
-
-        // Initialize customer messaging module
-        new \DynamicStockPricing\Modules\CustomerMessagingModule();
-    }
-
-    /**
-     * Enqueue scripts and styles
-     */
-    public function enqueue_scripts() {
-        wp_enqueue_style(
-            'dynamic-stock-pricing-frontend',
-            DYNAMIC_STOCK_PRICING_PLUGIN_URL . 'assets/css/frontend.css',
-            array(),
-            DYNAMIC_STOCK_PRICING_VERSION
-        );
-    }
+	/**
+	 * Enqueue scripts and styles
+	 */
+	public function enqueue_scripts() {
+		wp_enqueue_style(
+			'dynamic-stock-pricing-frontend',
+			DYNAMIC_STOCK_PRICING_PLUGIN_URL . 'assets/css/frontend.css',
+			array(),
+			DYNAMIC_STOCK_PRICING_VERSION
+		);
+	}
 }
 
 /**
  * Initialize the main plugin class
+ *
+ * @return object
  */
 function dynamic_stock_pricing_init() {
-    return Dynamic_Stock_Pricing_For_WC::get_instance();
+	return Dynamic_Stock_Pricing_For_WC::get_instance();
 }
 
 // Initialize the plugin
