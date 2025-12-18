@@ -24,19 +24,82 @@ class PricingService {
      * Initialize hooks
      */
     private function init_hooks() {
-        // Apply pricing adjustments
+        // Only adjust the main price to ensure calculations work properly
         add_filter('woocommerce_product_get_price', array($this, 'adjust_price'), 10, 2);
-        add_filter('woocommerce_product_get_regular_price', array($this, 'adjust_price'), 10, 2);
-        add_filter('woocommerce_product_get_sale_price', array($this, 'adjust_price'), 10, 2);
-        
+
+        // Use a targeted approach for the display to avoid sale appearance
+        add_filter('woocommerce_get_price_html', array($this, 'adjust_price_html'), 20, 2);
+        add_filter('woocommerce_cart_product_price', array($this, 'adjust_cart_product_price_html'), 20, 2);
+        add_filter('woocommerce_cart_item_price', array($this, 'adjust_cart_item_price_html'), 20, 3);
+
         // Handle cart pricing
         add_filter('woocommerce_add_cart_item_data', array($this, 'add_cart_item_data'), 10, 3);
         add_filter('woocommerce_get_cart_item_from_session', array($this, 'get_cart_item_from_session'), 20, 2);
         add_action('woocommerce_calculate_totals', array($this, 'calculate_totals'), 20);
-        
-        
-        // Compatibility with WooCommerce structured data for schema markup
-        add_filter('woocommerce_structured_data_product_offer', array($this, 'structured_data_price'), 10, 2);
+
+        // For checkout/cart calculations
+        add_action('woocommerce_before_calculate_totals', array($this, 'before_calculate_totals'), 20);
+    }
+
+    /**
+     * Adjust price HTML display to show only the adjusted price without sale indicators
+     */
+    public function adjust_price_html($price_html, $product) {
+        // Only apply adjustments if plugin is enabled and product exists
+        if (!$this->is_enabled() || !is_object($product) || !$product->is_type('simple') || !$product->managing_stock()) {
+            return $price_html;
+        }
+
+        $product_id = $product->get_id();
+        $original_regular_price = floatval(get_post_meta($product_id, '_regular_price', true));
+        $base_price = $original_regular_price > 0 ? $original_regular_price : floatval($product->get_price());
+        $adjusted_price = $this->calculate_adjusted_price($product_id, $base_price);
+
+        // Format the adjusted price using WooCommerce's price formatting
+        $formatted_price = wc_price($adjusted_price);
+
+        // Return the adjusted price without the original price strikethrough
+        return '<span class="woocommerce-Price-amount amount">' . $formatted_price . '</span>';
+    }
+
+    /**
+     * Adjust cart product price display
+     */
+    public function adjust_cart_product_price_html($price_html, $cart_item) {
+        $product = $cart_item['data'];
+
+        // Only apply adjustments if plugin is enabled and product exists
+        if (!$this->is_enabled() || !is_object($product) || !$product->is_type('simple') || !$product->managing_stock()) {
+            return $price_html;
+        }
+
+        $product_id = $product->get_id();
+        $original_regular_price = floatval(get_post_meta($product_id, '_regular_price', true));
+        $base_price = $original_regular_price > 0 ? $original_regular_price : floatval($product->get_price());
+        $adjusted_price = $this->calculate_adjusted_price($product_id, $base_price);
+
+        // Format the adjusted price using WooCommerce's price formatting
+        return wc_price($adjusted_price);
+    }
+
+    /**
+     * Adjust cart item price display
+     */
+    public function adjust_cart_item_price_html($product_price, $cart_item, $cart_item_key) {
+        $product = $cart_item['data'];
+
+        // Only apply adjustments if plugin is enabled and product exists
+        if (!$this->is_enabled() || !is_object($product) || !$product->is_type('simple') || !$product->managing_stock()) {
+            return $product_price;
+        }
+
+        $product_id = $product->get_id();
+        $original_regular_price = floatval(get_post_meta($product_id, '_regular_price', true));
+        $base_price = $original_regular_price > 0 ? $original_regular_price : floatval($product->get_price());
+        $adjusted_price = $this->calculate_adjusted_price($product_id, $base_price);
+
+        // Format the adjusted price using WooCommerce's price formatting
+        return wc_price($adjusted_price);
     }
 
     /**
@@ -143,9 +206,16 @@ class PricingService {
         }
 
         $product_id = $product->get_id();
-        $original_price = floatval($price);
+        // Get the original price directly from post meta to avoid compounding
+        $original_regular_price = floatval(get_post_meta($product_id, '_regular_price', true));
 
-        return $this->calculate_adjusted_price($product_id, $original_price);
+        // If for some reason the original price isn't available, use the passed price
+        $base_price = $original_regular_price > 0 ? $original_regular_price : floatval($price);
+
+        $adjusted_price = $this->calculate_adjusted_price($product_id, $base_price);
+
+        // Return adjusted price without creating sale appearance
+        return $adjusted_price;
     }
 
     /**
@@ -167,12 +237,14 @@ class PricingService {
         $product = wc_get_product($the_product_id);
 
         if ($product && $product->managing_stock()) {
-            $original_price = floatval($product->get_price());
-            $adjusted_price = $this->calculate_adjusted_price($the_product_id, $original_price);
+            $original_regular_price = floatval(get_post_meta($the_product_id, '_regular_price', true));
+            // Use original price to avoid compounding
+            $base_price = $original_regular_price > 0 ? $original_regular_price : floatval($product->get_price());
+            $adjusted_price = $this->calculate_adjusted_price($the_product_id, $base_price);
 
-            if ($adjusted_price != $original_price) {
+            if ($adjusted_price != $base_price) {
                 $cart_item_data['dsp_adjusted_price'] = $adjusted_price;
-                $cart_item_data['dsp_original_price'] = $original_price;
+                $cart_item_data['dsp_original_price'] = $base_price;
 
                 // Generate unique hash to prevent merging of items with different prices
                 $cart_item_data['dsp_unique_key'] = md5(microtime().rand());
@@ -240,6 +312,29 @@ class PricingService {
         }
 
         return $markup;
+    }
+
+    /**
+     * Adjust prices before totals are calculated (for cart/checkout)
+     */
+    public function before_calculate_totals($cart) {
+        if (!$this->is_enabled() || is_admin() || defined('DOING_AJAX')) {
+            return;
+        }
+
+        foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+            $product = $cart_item['data'];
+            $product_id = $product->get_id();
+
+            if ($product->get_type() === 'simple' && $product->managing_stock()) {
+                $original_regular_price = floatval(get_post_meta($product_id, '_regular_price', true));
+                $adjusted_price = $this->calculate_adjusted_price($product_id, $original_regular_price);
+
+                if ($adjusted_price != $original_regular_price && $original_regular_price > 0) {
+                    $product->set_price($adjusted_price);
+                }
+            }
+        }
     }
 
     /**
