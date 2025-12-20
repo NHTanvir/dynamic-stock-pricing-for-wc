@@ -24,8 +24,16 @@ class PricingService {
 	 * Initialize hooks
 	 */
 	private function init_hooks() {
+		// Check if HPOS is enabled
+		$hpos_enabled = $this->is_hpos_enabled();
+
 		// Apply pricing adjustment via a method that doesn't cause sale display
-		add_filter( 'woocommerce_product_get_price', array( $this, 'adjust_price' ), 10, 2 );
+		// Only apply to frontend to avoid issues with HPOS and order processing
+		if ( ! is_admin() && ! defined( 'DOING_AJAX' ) && ! $this->is_order_processing_context() ) {
+			add_filter( 'woocommerce_product_get_price', array( $this, 'adjust_price' ), 10, 2 );
+			add_filter( 'woocommerce_product_get_regular_price', array( $this, 'adjust_price' ), 10, 2 );
+			add_filter( 'woocommerce_product_get_sale_price', array( $this, 'adjust_price' ), 10, 2 );
+		}
 
 		// Use a targeted approach for the display to avoid sale appearance
 		add_filter( 'woocommerce_get_price_html', array( $this, 'adjust_price_html' ), 20, 2 );
@@ -36,9 +44,19 @@ class PricingService {
 		add_filter( 'woocommerce_add_cart_item_data', array( $this, 'add_cart_item_data' ), 10, 3 );
 		add_filter( 'woocommerce_get_cart_item_from_session', array( $this, 'get_cart_item_from_session' ), 20, 2 );
 		add_action( 'woocommerce_calculate_totals', array( $this, 'calculate_totals' ), 20 );
-		
-		// For checkout/cart calculations
-		add_action( 'woocommerce_before_calculate_totals', array( $this, 'before_calculate_totals' ), 20 );
+
+		// For checkout/cart calculations - only on frontend
+		if ( ! is_admin() && ! defined( 'DOING_AJAX' ) && ! $this->is_order_processing_context() ) {
+			add_action( 'woocommerce_before_calculate_totals', array( $this, 'before_calculate_totals' ), 20 );
+		}
+
+		// Compatibility with order processing and HPOS
+		add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'add_order_item_meta' ), 10, 4 );
+		add_filter( 'woocommerce_get_order_item_totals', array( $this, 'adjust_order_item_totals' ), 10, 3 );
+
+		// Email improvements compatibility
+		add_action( 'woocommerce_email', array( $this, 'setup_email_compatibility' ), 5 );
+		add_action( 'woocommerce_order_status_changed', array( $this, 'setup_email_compatibility' ), 5 );
 	}
 
 	/**
@@ -151,6 +169,11 @@ class PricingService {
 			return $price;
 		}
 
+		// Skip adjustment during admin operations, AJAX calls, and order processing to maintain HPOS compatibility
+		if ( is_admin() || defined( 'DOING_AJAX' ) || doing_action( 'woocommerce_new_order' ) || doing_action( 'woocommerce_update_order' ) || doing_action( 'woocommerce_save_order' ) ) {
+			return $price;
+		}
+
 		// Only apply to simple products with stock management enabled
 		if ( 'simple' !== $product->get_type() || ! $product->managing_stock() ) {
 			return $price;
@@ -159,12 +182,12 @@ class PricingService {
 		$product_id = $product->get_id();
 		// Get the original price directly from post meta to avoid compounding
 		$original_regular_price = floatval( get_post_meta( $product_id, '_regular_price', true ) );
-		
+
 		// If for some reason the original price isn't available, use the passed price
 		$base_price = $original_regular_price > 0 ? $original_regular_price : floatval( $price );
 
 		$adjusted_price = $this->calculate_adjusted_price( $product_id, $base_price );
-		
+
 		// Return adjusted price without creating sale appearance
 		return $adjusted_price;
 	}
@@ -182,6 +205,11 @@ class PricingService {
 			return $price_html;
 		}
 
+		// Skip adjustment during admin operations, AJAX calls, and order processing to maintain HPOS compatibility
+		if ( is_admin() || defined( 'DOING_AJAX' ) || doing_action( 'woocommerce_new_order' ) || doing_action( 'woocommerce_update_order' ) || doing_action( 'woocommerce_save_order' ) ) {
+			return $price_html;
+		}
+
 		$product_id = $product->get_id();
 		$original_regular_price = floatval( get_post_meta( $product_id, '_regular_price', true ) );
 		$base_price = $original_regular_price > 0 ? $original_regular_price : floatval( $product->get_price() );
@@ -189,7 +217,7 @@ class PricingService {
 
 		// Format the adjusted price using WooCommerce's price formatting
 		$formatted_price = wc_price( $adjusted_price );
-		
+
 		// Return the adjusted price without the original price strikethrough
 		return '<span class="woocommerce-Price-amount amount">' . $formatted_price . '</span>';
 	}
@@ -258,7 +286,7 @@ class PricingService {
 
 		$product_id   = absint( $product_id );
 		$variation_id = absint( $variation_id );
-		
+
 		if ( $product_id <= 0 ) {
 			return $cart_item_data;
 		}
@@ -275,7 +303,7 @@ class PricingService {
 			if ( $adjusted_price !== $base_price ) {
 				$cart_item_data['dsp_adjusted_price'] = $adjusted_price;
 				$cart_item_data['dsp_original_price'] = $base_price;
-				
+
 				// Generate unique hash to prevent merging of items with different prices
 				$cart_item_data['dsp_unique_key'] = md5( microtime() . wp_rand() );
 			}
@@ -322,20 +350,28 @@ class PricingService {
 	 * @param object $cart Cart object.
 	 */
 	public function before_calculate_totals( $cart ) {
-		if ( ! $this->is_enabled() || is_admin() || defined( 'DOING_AJAX' ) ) {
+		if ( ! $this->is_enabled() || is_admin() || defined( 'DOING_AJAX' ) || doing_action( 'woocommerce_new_order' ) || doing_action( 'woocommerce_update_order' ) || doing_action( 'woocommerce_save_order' ) ) {
 			return;
 		}
 
 		foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
 			$product    = $cart_item['data'];
 			$product_id = $product->get_id();
-			
+
 			if ( 'simple' === $product->get_type() && $product->managing_stock() ) {
 				$original_regular_price = floatval( get_post_meta( $product_id, '_regular_price', true ) );
 				$adjusted_price         = $this->calculate_adjusted_price( $product_id, $original_regular_price );
-				
+
 				if ( $adjusted_price !== $original_regular_price && $original_regular_price > 0 ) {
+					// Store original price in cart item for reference during order creation
 					$product->set_price( $adjusted_price );
+					$product->set_regular_price( $adjusted_price );
+
+					// Store adjustment info in cart for later reference
+					if ( ! isset( $cart_item['dsp_adjusted_price'] ) ) {
+						$cart_item['dsp_adjusted_price'] = $adjusted_price;
+						$cart_item['dsp_original_price'] = $original_regular_price;
+					}
 				}
 			}
 		}
@@ -445,5 +481,81 @@ class PricingService {
 			'adjustment_percentage' => $adjustment_percentage,
 			'message'             => $message,
 		);
+	}
+
+	/**
+	 * Add adjusted price as order item meta for HPOS compatibility
+	 *
+	 * @param WC_Order_Item_Product $item The order item object.
+	 * @param string $cart_item_key The cart item key.
+	 * @param array $values The cart item values.
+	 * @param WC_Order $order The order object.
+	 */
+	public function add_order_item_meta( $item, $cart_item_key, $values, $order ) {
+		if ( isset( $values['dsp_adjusted_price'] ) ) {
+			$item->add_meta_data( '_dsp_adjusted_price', $values['dsp_adjusted_price'], true );
+			$item->add_meta_data( '_dsp_original_price', $values['dsp_original_price'], true );
+		}
+	}
+
+	/**
+	 * Adjust order item totals display
+	 *
+	 * @param array $total_rows Order item totals.
+	 * @param WC_Order $order Order object.
+	 * @param bool $tax_display Tax display setting.
+	 * @return array
+	 */
+	public function adjust_order_item_totals( $total_rows, $order, $tax_display ) {
+		// This method can be used to adjust how order totals are displayed if needed
+		return $total_rows;
+	}
+
+	/**
+	 * Check if HPOS (High-Performance Order Storage) is enabled
+	 *
+	 * @return bool
+	 */
+	private function is_hpos_enabled() {
+		if ( ! class_exists( 'Automattic\WooCommerce\Utilities\OrderUtil' ) ) {
+			return false;
+		}
+		return \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+	}
+
+	/**
+	 * Check if we're in an order processing context that should not have prices modified
+	 *
+	 * @return bool
+	 */
+	private function is_order_processing_context() {
+		return doing_action( 'woocommerce_new_order' ) ||
+			   doing_action( 'woocommerce_update_order' ) ||
+			   doing_action( 'woocommerce_save_order' ) ||
+			   doing_action( 'woocommerce_rest_insert_shop_order_object' ) ||
+			   doing_action( 'woocommerce_gzd_shipment_created' );
+	}
+
+	/**
+	 * Setup email compatibility when email is being sent
+	 */
+	public function setup_email_compatibility() {
+		// In email contexts, temporarily disable price adjustments to show original prices
+		// This ensures emails show the actual charged prices rather than dynamic adjustments
+		remove_filter( 'woocommerce_product_get_price', array( $this, 'adjust_price' ), 10 );
+		remove_filter( 'woocommerce_product_get_regular_price', array( $this, 'adjust_price' ), 10 );
+		remove_filter( 'woocommerce_get_price_html', array( $this, 'adjust_price_html' ), 20 );
+	}
+
+	/**
+	 * Adjust email order totals for email improvements compatibility
+	 *
+	 * @param string $total Formatted order total.
+	 * @param WC_Order $order Order object.
+	 * @return string
+	 */
+	public function adjust_email_order_totals( $total, $order ) {
+		// This method can be used to adjust how order totals are displayed in emails if needed
+		return $total;
 	}
 }
