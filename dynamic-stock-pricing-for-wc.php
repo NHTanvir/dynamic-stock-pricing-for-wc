@@ -24,18 +24,6 @@ define( 'DYNAMIC_STOCK_PRICING_VERSION', '1.0.0' );
 define( 'DYNAMIC_STOCK_PRICING_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'DYNAMIC_STOCK_PRICING_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 
-// Check if WooCommerce is active
-if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
-	add_action( 'admin_notices', 'dsp_woocommerce_missing_notice' );
-	return;
-}
-
-/**
- * Display notice if WooCommerce is not active
- */
-function dsp_woocommerce_missing_notice() {
-	echo '<div class="notice notice-error"><p><strong>Dynamic Stock Pricing for WooCommerce</strong> requires WooCommerce to be installed and active.</p></div>';
-}
 
 /**
  * Main plugin class
