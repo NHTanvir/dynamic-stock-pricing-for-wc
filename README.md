@@ -1,6 +1,6 @@
 # Dynamic Stock Pricing for WooCommerce
 
-**Contributors:** naymulhasantanvir  
+**Contributors:** tanvir26  
 **Tags:** woocommerce, dynamic pricing, stock management, inventory, pricing  
 **Requires at least:** 5.0  
 **Tested up to:** 6.9  
