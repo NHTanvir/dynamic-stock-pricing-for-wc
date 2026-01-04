@@ -1,7 +1,7 @@
-# English Translation for StockMatrix Pricing for WooCommerce
+# English Translation for StockAdaptix Pricing for WooCommerce
 msgid ""
 msgstr ""
-"Project-Id-Version: StockMatrix Pricing for WooCommerce 1.0.0\n"
+"Project-Id-Version: StockAdaptix Pricing for WooCommerce 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-01 00:00+0000\n"
 "PO-Revision-Date: 2023-01-01 00:00+0000\n"
@@ -17,12 +17,12 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: dynamic-stock-pricing-for-wc.php:8
-msgid "StockMatrix Pricing for WooCommerce"
-msgstr "StockMatrix Pricing for WooCommerce"
+msgid "StockAdaptix Pricing for WooCommerce"
+msgstr "StockAdaptix Pricing for WooCommerce"
 
 #: includes/Modules/AdminSettingsModule.php:36
-msgid "StockMatrix Pricing"
-msgstr "StockMatrix Pricing"
+msgid "StockAdaptix Pricing"
+msgstr "StockAdaptix Pricing"
 
 #: includes/Modules/AdminSettingsModule.php:37
 msgid "Stock Pricing"
@@ -140,8 +140,8 @@ msgid "Dynamic Pricing Notice"
 msgstr "Dynamic Pricing Notice"
 
 #: includes/Services/CompatibilityService.php:42
-msgid "StockMatrix Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
-msgstr "StockMatrix Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
+msgid "StockAdaptix Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
+msgstr "StockAdaptix Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
 
 #. translators: 1: adjustment percentage
 #: includes/Services/PricingService.php:281
@@ -159,5 +159,5 @@ msgid "Price decreased by %d%% due to high stock"
 msgstr "Price decreased by %d%% due to high stock"
 
 #: dynamic-stock-pricing-for-wc.php:29
-msgid "StockMatrix Pricing for WooCommerce requires WooCommerce to be installed and active."
-msgstr "StockMatrix Pricing for WooCommerce requires WooCommerce to be installed and active."
+msgid "StockAdaptix Pricing for WooCommerce requires WooCommerce to be installed and active."
+msgstr "StockAdaptix Pricing for WooCommerce requires WooCommerce to be installed and active."

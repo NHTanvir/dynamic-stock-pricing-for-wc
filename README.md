@@ -1,4 +1,4 @@
-# StockMatrix Pricing for WooCommerce
+# StockAdaptix Pricing for WooCommerce
 
 **Contributors:** tanvir26
 **Tags:** woocommerce, dynamic pricing, stock management, inventory, pricing
@@ -14,7 +14,7 @@ Dynamically adjust product prices based on current stock quantity to reflect sup
 
 ## Description
 
-The StockMatrix Pricing for WooCommerce plugin allows you to automatically adjust product prices based on current inventory levels. This helps you respond to supply and demand fluctuations in real-time without manual price changes.
+The StockAdaptix Pricing for WooCommerce plugin allows you to automatically adjust product prices based on current inventory levels. This helps you respond to supply and demand fluctuations in real-time without manual price changes.
 
 ### Key Features:
 * Automatically adjust prices based on stock quantities
@@ -35,7 +35,7 @@ All thresholds and percentage adjustments can be configured in the admin setting
 
 ## Installation
 
-1. Upload the plugin files to the `/wp-content/plugins/stockmatrix-pricing-for-wc` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/stockadaptix-pricing` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. Go to WooCommerce > Stock Pricing to configure settings
 4. Enable the plugin and set your desired thresholds and percentage adjustments

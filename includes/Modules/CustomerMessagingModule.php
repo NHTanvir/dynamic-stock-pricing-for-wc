@@ -1,5 +1,5 @@
 <?php
-namespace StockMatrixPricing\Modules;
+namespace StockAdaptixPricing\Modules;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -110,7 +110,7 @@ class CustomerMessagingModule {
 
 		if ( $needs_message && $settings['customer_message_enabled'] ) {
 			$item_data[] = array(
-				'key'     => __( 'Dynamic Pricing Notice', 'stockmatrix-pricing-for-wc' ),
+				'key'     => __( 'Dynamic Pricing Notice', 'stockadaptix-pricing' ),
 				'value'   => esc_html( $settings['customer_message'] ),
 				'display' => '',
 			);
@@ -128,10 +128,10 @@ class CustomerMessagingModule {
 		$defaults = array(
 			'enable_plugin'            => 1,
 			'customer_message_enabled' => 1,
-			'customer_message'         => __( 'High demand – price adjusted based on availability', 'stockmatrix-pricing-for-wc' ),
+			'customer_message'         => __( 'High demand – price adjusted based on availability', 'stockadaptix-pricing' ),
 		);
 
-		$settings = get_option( 'stockmatrix_pricing_settings', array() );
+		$settings = get_option( 'stockadaptix_pricing_settings', array() );
 		return wp_parse_args( $settings, $defaults );
 	}
 

@@ -1,9 +1,9 @@
 # Copyright (C) 2023 Naymul Hasan Tanvir
-# This file is distributed under the same license as the StockMatrix Pricing for WooCommerce plugin.
+# This file is distributed under the same license as the StockAdaptix Pricing for WooCommerce plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: StockMatrix Pricing for WooCommerce 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stockmatrix-pricing-for-wc\n"
+"Project-Id-Version: StockAdaptix Pricing for WooCommerce 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/stockadaptix-pricing\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "POT-Creation-Date: 2023-12-18T10:00:00+00:00\n"
 "PO-Revision-Date: 2023-12-18T10:00:00+00:00\n"
 "X-Generator: WP-CLI 2.7.1\n"
-"X-Domain: stockmatrix-pricing\n"
+"X-Domain: stockadaptix-pricing\n"
 
 #. translators: 1: adjustment percentage
 #: includes/Services/PricingService.php:374
@@ -30,11 +30,11 @@ msgid "Price decreased by %d%% due to high stock"
 msgstr ""
 
 #: dynamic-stock-pricing-for-wc.php:29
-msgid "StockMatrix Pricing for WooCommerce requires WooCommerce to be installed and active."
+msgid "StockAdaptix Pricing for WooCommerce requires WooCommerce to be installed and active."
 msgstr ""
 
 #: includes/Modules/AdminSettingsModule.php:36
-msgid "StockMatrix Pricing"
+msgid "StockAdaptix Pricing"
 msgstr ""
 
 #: includes/Modules/AdminSettingsModule.php:37
@@ -154,5 +154,5 @@ msgid "Dynamic Pricing Notice"
 msgstr ""
 
 #: includes/Services/CompatibilityService.php:42
-msgid "Dynamic Stock Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
+msgid "StockAdaptix Pricing for WooCommerce: Requires WooCommerce version 5.0 or higher."
 msgstr ""

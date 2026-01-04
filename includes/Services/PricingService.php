@@ -1,5 +1,5 @@
 <?php
-namespace StockMatrixPricing\Services;
+namespace StockAdaptixPricing\Services;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -74,10 +74,10 @@ class PricingService {
 			'high_stock_threshold'       => 100,
 			'high_stock_price_decrease'  => 15,
 			'customer_message_enabled'   => 1,
-			'customer_message'           => __( 'High demand – price adjusted based on availability', 'stockmatrix-pricing-for-wc' ),
+			'customer_message'           => __( 'High demand – price adjusted based on availability', 'stockadaptix-pricing' ),
 		);
 
-		$settings = get_option( 'stockmatrix_pricing_settings', array() );
+		$settings = get_option( 'stockadaptix_pricing_settings', array() );
 		return wp_parse_args( $settings, $defaults );
 	}
 
@@ -465,15 +465,15 @@ class PricingService {
 		if ( $stock_quantity <= $low_stock_threshold ) {
 			$adjustment_percentage = $low_increase_pct;
 			/* translators: 1: adjustment percentage */
-			$message = sprintf( __( 'Price increased by %d%% due to low stock', 'stockmatrix-pricing-for-wc' ), $adjustment_percentage );
+			$message = sprintf( __( 'Price increased by %d%% due to low stock', 'stockadaptix-pricing' ), $adjustment_percentage );
 		} elseif ( $stock_quantity <= $medium_stock_threshold ) {
 			$adjustment_percentage = $medium_increase_pct;
 			/* translators: 1: adjustment percentage */
-			$message = sprintf( __( 'Price increased by %d%% due to limited stock', 'stockmatrix-pricing-for-wc' ), $adjustment_percentage );
+			$message = sprintf( __( 'Price increased by %d%% due to limited stock', 'stockadaptix-pricing' ), $adjustment_percentage );
 		} elseif ( $stock_quantity >= $high_stock_threshold ) {
 			$adjustment_percentage = -$high_decrease_pct;
 			/* translators: 1: adjustment percentage */
-			$message = sprintf( __( 'Price decreased by %d%% due to high stock', 'stockmatrix-pricing-for-wc' ), abs( $adjustment_percentage ) );
+			$message = sprintf( __( 'Price decreased by %d%% due to high stock', 'stockadaptix-pricing' ), abs( $adjustment_percentage ) );
 		}
 
 		return array(

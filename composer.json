@@ -1,5 +1,5 @@
 {
-    "name": "naymulhasantanvir/stockmatrix-pricing-for-woocommerce",
+    "name": "naymulhasantanvir/stockadaptix-pricing-for-woocommerce",
     "description": "Dynamically adjust WooCommerce product prices based on current stock quantity to reflect supply and demand in real-time.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
@@ -18,10 +18,10 @@
         "stock",
         "dynamic-pricing"
     ],
-    "homepage": "https://wordpress.org/plugins/stockmatrix-pricing-for-woocommerce/",
+    "homepage": "https://wordpress.org/plugins/stockadaptix-pricing-for-woocommerce/",
     "support": {
-        "issues": "https://github.com/naymulhasantanvir/stockmatrix-pricing-for-woocommerce/issues",
-        "forum": "https://wordpress.org/support/plugin/stockmatrix-pricing-for-woocommerce/"
+        "issues": "https://github.com/naymulhasantanvir/stockadaptix-pricing-for-woocommerce/issues",
+        "forum": "https://wordpress.org/support/plugin/stockadaptix-pricing/"
     },
     "require": {
         "php": ">=5.6",

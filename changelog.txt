@@ -1,7 +1,7 @@
 == Changelog ==
 
 = 1.0.0 =
-* Initial release of StockMatrix Pricing for WooCommerce
+* Initial release of StockAdaptix Pricing for WooCommerce
 * Added dynamic pricing based on stock levels:
   - If stock ≤ 5 → increase price by 40%
   - If stock ≤ 20 → increase price by 20%
