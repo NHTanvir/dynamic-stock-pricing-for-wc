@@ -262,7 +262,7 @@ class AdminSettingsModule {
 	public function sanitize_settings( $input ) {
 		// Verify nonce
 		if ( ! isset( $_POST['stockadaptix_pricing_settings_nonce'] ) ||
-			 ! wp_verify_nonce( wp_unslash( $_POST['stockadaptix_pricing_settings_nonce'] ), 'stockadaptix_pricing_settings_action' ) ) {
+			 ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['stockadaptix_pricing_settings_nonce'] ) ), 'stockadaptix_pricing_settings_action' ) ) {
 			if ( ! current_user_can( 'manage_woocommerce' ) ) {
 				return array(); // Return empty array if user doesn't have proper capabilities
 			}
