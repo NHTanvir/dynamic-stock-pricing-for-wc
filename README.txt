@@ -1,66 +1,71 @@
-StockAdaptix Pricing for WooCommerce
-
+=== StockAdaptix – Inventory-Driven Dynamic Pricing for WooCommerce ===
 Contributors: tanvir26
 Tags: woocommerce, dynamic pricing, stock management, inventory, pricing
 Requires at least: 5.0
 Tested up to: 6.9
+Requires PHP: 7.4
 WC requires at least: 5.0
 WC tested up to: 8.0
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Dynamically adjust product prices based on current stock quantity to reflect supply and demand in real-time.
+Dynamically adjust WooCommerce product prices based on inventory levels to reflect real-time supply and demand.
 
-Description
+== Description ==
 
-The StockAdaptix Pricing for WooCommerce plugin allows you to automatically adjust product prices based on current inventory levels. This helps you respond to supply and demand fluctuations in real-time without manual price changes.
+StockAdaptix is an inventory-driven dynamic pricing plugin for WooCommerce that automatically adjusts product prices based on current stock levels. This allows store owners to respond to supply and demand changes in real time without manually updating prices.
 
-Key Features:
-* Automatically adjust prices based on stock quantities
-* Configurable thresholds and percentage adjustments
-* Works with simple products and WooCommerce stock management
-* Compatible with cart and checkout processes
-* Optional customer messaging about price adjustments
+Prices can increase when stock is low and decrease when inventory is high, helping maximize revenue and manage demand efficiently.
+
+### Key Features
+* Automatically adjust prices based on stock quantity
+* Fully configurable stock thresholds and percentage adjustments
+* Works with WooCommerce simple products using stock management
+* Compatible with cart and checkout pricing
+* Optional customer messaging for price changes
 * Translation-ready
 * HPOS (High-Performance Order Storage) compatible
 
-Pricing Rules (Configurable):
-* If stock <= 5 -> increase price by 40%
-* If stock <= 20 -> increase price by 20%
-* If stock >= 100 -> decrease price by 15%
-* Otherwise -> use normal price
+### Example Pricing Rules (Configurable)
+* If stock <= 5 → increase price by 40%
+* If stock <= 20 → increase price by 20%
+* If stock >= 100 → decrease price by 15%
+* Otherwise → use the regular price
 
-All thresholds and percentage adjustments can be configured in the admin settings under WooCommerce > Stock Pricing.
+All rules and thresholds can be configured from **WooCommerce → Stock Pricing** in the admin panel.
 
-Installation
+== Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/stockadaptix-pricing` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Go to WooCommerce > Stock Pricing to configure settings
-4. Enable the plugin and set your desired thresholds and percentage adjustments
+1. Upload the plugin files to the `/wp-content/plugins/stockadaptix-pricing` directory, or install the plugin directly from the WordPress Plugins screen.
+2. Activate the plugin through the **Plugins** menu in WordPress.
+3. Go to **WooCommerce → Stock Pricing** to configure pricing rules.
+4. Enable the plugin and set your desired stock thresholds and price adjustments.
 
-Frequently Asked Questions
+== Frequently Asked Questions ==
 
-Which products are supported?
-Currently, the plugin works with simple products that have stock management enabled in WooCommerce.
+= Which products are supported? =
+Currently, the plugin supports WooCommerce simple products with stock management enabled.
 
-How do I customize the pricing rules?
-Go to WooCommerce > Stock Pricing in your WordPress admin to configure all pricing thresholds and percentage adjustments.
+= How do I customize the pricing rules? =
+Navigate to **WooCommerce → Stock Pricing** in your WordPress admin to configure all thresholds and percentage adjustments.
 
-Does this affect the original product price?
-No, the plugin only displays adjusted prices based on stock levels without modifying your original product prices in the database.
+= Does this affect the original product price? =
+No. StockAdaptix dynamically adjusts displayed prices without modifying the original product prices stored in the database.
 
-Can customers see that prices are adjusted?
-Yes, optionally you can display a custom message to customers explaining that prices have been adjusted based on availability.
+= Can customers see that prices are adjusted? =
+Yes. You can optionally display a custom message informing customers that prices are adjusted based on availability.
 
-Is this compatible with other pricing plugins?
-This plugin modifies product pricing based on stock levels, so it may conflict with other plugins that directly alter product prices. We recommend testing compatibility with other pricing plugins before using them together.
+= Is this compatible with other pricing plugins? =
+Because this plugin modifies prices dynamically, it may conflict with other pricing plugins. We recommend testing compatibility before using them together.
 
-Does the plugin work with variable products?
-Currently, the plugin only supports simple products with stock management enabled. Support for variable products may be added in future versions.
+= Does the plugin support variable products? =
+Currently, only simple products are supported. Variable product support may be added in future releases.
 
-Changelog
+== Screenshots ==
+1. Stock-based pricing settings page
 
-1.0.0
-* Initial release
+== Changelog ==
+
+= 1.0.0 =
+* Initial public release
