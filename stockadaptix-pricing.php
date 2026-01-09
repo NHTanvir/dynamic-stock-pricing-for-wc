@@ -2,7 +2,7 @@
 /**
  * Plugin Name: StockAdaptix – Inventory-Driven Dynamic Pricing for WooCommerce
  * Description: Dynamically adjust product prices based on current stock quantity to reflect supply and demand in real-time.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Naymul Hasan Tanvir
  * License: GPL v2 or later
  * Text Domain: stockadaptix-pricing

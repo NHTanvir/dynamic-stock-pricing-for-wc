@@ -6,7 +6,7 @@ Tested up to: 6.9
 Requires PHP: 7.4
 WC requires at least: 5.0
 WC tested up to: 10.4.3
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,3 +69,5 @@ Currently, only simple products are supported. Variable product support may be a
 
 = 1.0.0 =
 * Initial public release
+= 1.0.1 =
+- Fixed bug

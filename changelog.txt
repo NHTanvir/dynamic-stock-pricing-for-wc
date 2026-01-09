@@ -14,3 +14,6 @@
 * Added compatibility with simple products and WooCommerce stock management
 * Made translation-ready with POT file included
 * Implemented proper WordPress and WooCommerce coding standards
+
+= 1.0.1 =
+- Fixed bug
