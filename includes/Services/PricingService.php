@@ -230,7 +230,14 @@ class PricingService {
 	 * @return string
 	 */
 	public function adjust_cart_product_price_html( $price_html, $cart_item ) {
-		$product = $cart_item['data'];
+		// Check if $cart_item is an array (expected) or a product object (WooCommerce quirk)
+		if ( is_object( $cart_item ) && $cart_item instanceof WC_Product ) {
+			$product = $cart_item;
+		} elseif ( is_array( $cart_item ) && isset( $cart_item['data'] ) ) {
+			$product = $cart_item['data'];
+		} else {
+			return $price_html;
+		}
 		
 		// Only apply adjustments if plugin is enabled and product exists
 		if ( ! $this->is_enabled() || ! is_object( $product ) || ! $product->is_type( 'simple' ) || ! $product->managing_stock() ) {
